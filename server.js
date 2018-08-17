@@ -46,6 +46,34 @@ app.get('/404' ,(req , res) =>{
 });
 
 
+app.use((req, res, next) =>{
+    res.status(404);
+    res.format({
+        html:() =>{
+            res.render('errorHandler.hbs',{
+                errorCode: 404,
+                errorMessage: 'Page not found'
+            });
+        },
+        json:() =>{
+           res.json({error : 'Not found'});
+        },
+        default: () =>{
+            res.render('errorHandler.hbs',{
+                errorCode: 404,
+                errorMessage: 'Page not found'
+            });
+        }
+    })
+});
+
+app.use((err, req, res, next) => {
+    res.render('errorHandler.hbs',{
+        errorCode: 500,
+        errorMessage: 'Oops! Something went wrong'
+    });
+});
+
 app.listen(port ,() =>{
     console.log(`Server started on port: ${port}`);
 });
