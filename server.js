@@ -1,12 +1,16 @@
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 9898;
 var app = express();
 
+
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
     var now = new Date().toString();
@@ -29,6 +33,11 @@ app.use(express.static(__dirname + '/public')); //rendering static files
 
 app.get('/',(req, res) => {
     res.render('login.hbs');
+
+});
+
+app.post('/login',(req, res) => {
+    res.send(`Your sent the fields : UserName :${req.body.username} and Password: ${req.body.password}`);
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -77,3 +86,5 @@ app.use((err, req, res, next) => {
 app.listen(port ,() =>{
     console.log(`Server started on port: ${port}`);
 });
+
+module.exports.app =  app;
